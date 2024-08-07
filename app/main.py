@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 import tempfile
 import os
 from datetime import datetime
+import hashlib
 
 from .database import engine, get_db
 from . import models
@@ -27,6 +28,18 @@ def cast_csv_data(row):
 async def upload_csv(file: UploadFile = File(...), db: Session = Depends(get_db)):
     contents = await file.read()
     
+    file_hash = hashlib.md5(contents).hexdigest()
+
+    # Check for existing file hash
+    existing_file_hash = db.query(models.FileHash).filter_by(file_hash=file_hash).first()
+    if existing_file_hash:
+        raise HTTPException(status_code=409, detail="Duplicate file entry. File with this content already exists.")
+
+    # Create a new FileHash record
+    file_hash_record = models.FileHash(file_hash=file_hash)
+    db.add(file_hash_record)
+
+
     with tempfile.NamedTemporaryFile(delete=False, suffix=".csv") as temp_file:
         temp_file.write(contents)
         temp_file_path = temp_file.name
