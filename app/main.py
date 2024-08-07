@@ -16,7 +16,7 @@ app = FastAPI()
 def cast_csv_data(row):
     try:
         return {
-            'date': pd.to_datetime(row['date']).date(),
+            'date': pd.to_datetime(row['date'], format='%d/%m/%Y', dayfirst=True).date(),
             'hours_worked': float(row['hours worked']),
             'employee_id': int(row['employee id']),
             'job_group': str(row['job group']).strip().upper(),
