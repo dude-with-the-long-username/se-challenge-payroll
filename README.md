@@ -1,3 +1,14 @@
+# How to Run:
+
+- `python -m venv venv`
+- `pip install -r requirements.txt`
+- `uvicorn app.main:app --reload`
+- run `app > db_hardcodesqlsql` against the generated `sql_app.db` file
+- visit `http://127.0.0.1:8000/docs` & use the api end points
+
+
+# Problem statement:
+
 # Wave Software Development Challenge
 
 Applicants for the Full-stack Developer role at Wave must
