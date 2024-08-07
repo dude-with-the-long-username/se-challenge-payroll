@@ -19,7 +19,8 @@ def cast_csv_data(row):
             'date': pd.to_datetime(row['date']).date(),
             'hours_worked': float(row['hours worked']),
             'employee_id': int(row['employee id']),
-            'job_group': str(row['job group']).strip().upper()
+            'job_group': str(row['job group']).strip().upper(),
+            'half_of_month': 1 if pd.to_datetime(row['date']).day <= 15 else 2   # calculating which half (first or second) of the month, the date belongs to
         }
     except ValueError as e:
         raise ValueError(f"Error casting data in row {row.name + 2}: {str(e)}")
@@ -64,6 +65,54 @@ async def upload_csv(file: UploadFile = File(...), db: Session = Depends(get_db)
     finally:
         # Clean up the temporary file
         os.unlink(temp_file_path)
+
+@app.get("/payroll_report")
+async def get_payroll_report(db: Session = Depends(get_db)):
+
+    # SQL query to return output in desired format
+    payroll_report_query = """
+
+    SELECT
+        wd.employee_id,
+        CASE WHEN wd.half_of_month = 1 
+                THEN date(wd.date, 'start of month') 
+            ELSE date(wd.date, 'start of month', '+15 days') 
+        END AS start_date,
+        CASE WHEN wd.half_of_month = 1 
+                THEN date(wd.date, 'start of month', '+14 days') 
+            ELSE date(wd.date, 'start of month', '+1 month', '-1 day') 
+        END AS end_date,
+    SUM(wd.hours_worked * hr.hourly_rate) AS total_amount_paid
+    FROM employee_work wd
+        INNER JOIN HourlyRates hr 
+            ON wd.job_group = hr.job_group
+    GROUP BY wd.employee_id,
+        wd.half_of_month
+
+    """
+
+    report_data = db.execute(payroll_report_query).fetchall()
+
+
+    processed_report_data = {
+        "payrollReport": {
+            "employeeReports": [
+                {
+                    "employeeId": str(row[0]),  # Convert employee_id to string
+                    "payPeriod": {
+                        "startDate": row[1],
+                        "endDate": row[2]
+                    },
+                    "amountPaid": f"${row[3]:.2f}"  # Format amount with two decimal places
+                }
+                for row in report_data
+            ]
+        }
+    }
+
+
+    return processed_report_data
+
 
 if __name__ == "__main__":
     import uvicorn
