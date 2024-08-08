@@ -1,4 +1,4 @@
-# Contains queries
+# SQL queries
 
 def get_update_start_and_end_date_query():
     return """

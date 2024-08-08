@@ -84,7 +84,7 @@ async def get_payroll_report(db: Session = Depends(get_db)):
         "payrollReport": {
             "employeeReports": [
                 {
-                    "employeeId": str(row[0]),  # Convert employee_id to string
+                    "employeeId": str(row[0]),
                     "payPeriod": {
                         "startDate": row[1],
                         "endDate": row[2]

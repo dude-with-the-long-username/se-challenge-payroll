@@ -1,10 +1,6 @@
 from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey
 from .database import Base
 from sqlalchemy.sql.sqltypes import Date
-from sqlalchemy.orm import relationship
-
-
-
 
 class FileHash(Base):
     __tablename__ = "file_hash"
