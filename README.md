@@ -12,8 +12,9 @@
 ### Requirement 1 (successfully upload csv file):
   - ![csv_upload](docs/csv_upload.png)
 ### Requirement 2 (Payroll generator):
-  - ![payroll-42](docs/payroll-40.png)
-  - Output:
+
+  - when uploading [time-report-42.csv](./time-report-42.csv), we get the following output:
+  - ![payroll-42](docs/payroll-42.png)
 ```json
   {
   "payrollReport": {
@@ -21,85 +22,118 @@
       {
         "employeeId": "1",
         "payPeriod": {
-          "startDate": "2023-01-01",
-          "endDate": "2023-01-15"
+          "startDate": "2023-11-01",
+          "endDate": "2023-11-15"
         },
-        "amountPaid": "$300.00"
+        "amountPaid": "$150.00"
       },
       {
         "employeeId": "1",
         "payPeriod": {
-          "startDate": "2023-01-16",
-          "endDate": "2023-01-31"
+          "startDate": "2023-11-16",
+          "endDate": "2023-11-30"
         },
-        "amountPaid": "$80.00"
+        "amountPaid": "$220.00"
+      },
+      {
+        "employeeId": "1",
+        "payPeriod": {
+          "startDate": "2023-12-01",
+          "endDate": "2023-12-15"
+        },
+        "amountPaid": "$150.00"
+      },
+      {
+        "employeeId": "1",
+        "payPeriod": {
+          "startDate": "2023-12-16",
+          "endDate": "2023-12-31"
+        },
+        "amountPaid": "$220.00"
       },
       {
         "employeeId": "2",
         "payPeriod": {
-          "startDate": "2023-01-16",
-          "endDate": "2023-01-31"
+          "startDate": "2023-11-01",
+          "endDate": "2023-11-15"
         },
-        "amountPaid": "$90.00"
+        "amountPaid": "$930.00"
+      },
+      {
+        "employeeId": "2",
+        "payPeriod": {
+          "startDate": "2023-12-01",
+          "endDate": "2023-12-15"
+        },
+        "amountPaid": "$930.00"
+      },
+      {
+        "employeeId": "3",
+        "payPeriod": {
+          "startDate": "2023-11-01",
+          "endDate": "2023-11-15"
+        },
+        "amountPaid": "$590.00"
+      },
+      {
+        "employeeId": "3",
+        "payPeriod": {
+          "startDate": "2023-12-01",
+          "endDate": "2023-12-15"
+        },
+        "amountPaid": "$470.00"
+      },
+      {
+        "employeeId": "4",
+        "payPeriod": {
+          "startDate": "2023-02-16",
+          "endDate": "2023-02-28"
+        },
+        "amountPaid": "$150.00"
+      },
+      {
+        "employeeId": "4",
+        "payPeriod": {
+          "startDate": "2023-11-01",
+          "endDate": "2023-11-15"
+        },
+        "amountPaid": "$150.00"
+      },
+      {
+        "employeeId": "4",
+        "payPeriod": {
+          "startDate": "2023-11-16",
+          "endDate": "2023-11-30"
+        },
+        "amountPaid": "$450.00"
+      },
+      {
+        "employeeId": "4",
+        "payPeriod": {
+          "startDate": "2023-12-01",
+          "endDate": "2023-12-15"
+        },
+        "amountPaid": "$150.00"
+      },
+      {
+        "employeeId": "4",
+        "payPeriod": {
+          "startDate": "2023-12-16",
+          "endDate": "2023-12-31"
+        },
+        "amountPaid": "$450.00"
       }
     ]
   }
 }
 ```
+
 ### Requirement 3 (Don't allow duplicate file to be uploaded):
+  - If we try to upload the same file again, we get the following error:
   - ![duplicate_file_error](docs/duplicate_file_error.png)
+
 ### Requirement 4 (Cumulative payroll when uploading other csv files too):
-  - when uploading another file [time-report-41](./samples/time-report-41.csv) too into the API endpoint, we get the following output:
-  - ![cumulative payroll of time-report-40 & 43](./docs/payroll-40+41.png)
-  - json output:
-  ```json
-  {
-    "payrollReport": {
-      "employeeReports": [
-        {
-          "employeeId": "1",
-          "payPeriod": {
-            "startDate": "2023-01-01",
-            "endDate": "2023-01-15"
-          },
-          "amountPaid": "$900.00"
-        },
-        {
-          "employeeId": "1",
-          "payPeriod": {
-            "startDate": "2023-01-16",
-            "endDate": "2023-01-31"
-          },
-          "amountPaid": "$240.00"
-        },
-        {
-          "employeeId": "1",
-          "payPeriod": {
-            "startDate": "2024-01-16",
-            "endDate": "2024-01-31"
-          },
-          "amountPaid": "$80.00"
-        },
-        {
-          "employeeId": "2",
-          "payPeriod": {
-            "startDate": "2023-01-16",
-            "endDate": "2023-01-31"
-          },
-          "amountPaid": "$270.00"
-        },
-        {
-          "employeeId": "2",
-          "payPeriod": {
-            "startDate": "2024-01-01",
-            "endDate": "2024-01-15"
-          },
-          "amountPaid": "$120.00"
-        }
-      ]
-    }
-  }
-  ```
+  - when uploading other files too into the API endpoint, cumulative payroll report is generated. You can test this with the file present in the path `/samples/`
 
 ---
 
