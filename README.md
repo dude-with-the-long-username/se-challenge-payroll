@@ -4,7 +4,7 @@
 - Install dependencies `pip install -r requirements.txt`
 - Run fastapi app using `uvicorn app.main:app --reload`
 - visit `http://127.0.0.1:8000/docs` & use the api end points
-- You can try uploading the time-report-42.csv file as a sample. [time-report-42](./samples/time-report-42.csv)
+- You can try uploading the time-report-40.csv file as a sample. [time-report-40](./samples/time-report-40.csv)
 
 
 # 📸 Screenshots:
@@ -12,7 +12,7 @@
 ### Requirement 1 (successfully upload csv file):
   - ![csv_upload](docs/csv_upload.png)
 ### Requirement 2 (Payroll generator):
-  - ![payroll-42](docs/payroll-42.png)
+  - ![payroll-42](docs/payroll-40.png)
   - Output:
 ```json
   {
@@ -49,8 +49,8 @@
 ### Requirement 3 (Don't allow duplicate file to be uploaded):
   - ![duplicate_file_error](docs/duplicate_file_error.png)
 ### Requirement 4 (Cumulative payroll when uploading other csv files too):
-  - when uploading another file [time-report-43](./samples/time-report-43.csv) too into the API endpoint, we get the following output:
-  - ![cumulative payroll of time-report-42 & 43](./docs/payroll-42+43.png)
+  - when uploading another file [time-report-41](./samples/time-report-41.csv) too into the API endpoint, we get the following output:
+  - ![cumulative payroll of time-report-40 & 43](./docs/payroll-40+41.png)
   - json output:
   ```json
   {
@@ -144,7 +144,7 @@ Each individual CSV file is known as a "time report", and will contain:
 1. 0 or more data rows
 
 In addition, the file name should be of the format `time-report-x.csv`,
-where `x` is the ID of the time report represented as an integer. For example, `time-report-42.csv` would represent a report with an ID of `42`.
+where `x` is the ID of the time report represented as an integer. For example, `time-report-40.csv` would represent a report with an ID of `42`.
 
 You can assume that:
 
@@ -153,7 +153,7 @@ You can assume that:
 1. There will always be a well-formed header line.
 1. There will always be a well-formed file name.
 
-A sample input file named `time-report-42.csv` is included in this repo.
+A sample input file named `time-report-40.csv` is included in this repo.
 
 ### What your API must do:
 
