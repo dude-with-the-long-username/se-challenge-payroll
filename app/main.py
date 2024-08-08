@@ -84,7 +84,7 @@ async def get_payroll_report(db: Session = Depends(get_db)):
         END AS end_date,
     SUM(wd.hours_worked * hr.hourly_rate) AS total_amount_paid
     FROM employee_work wd
-        INNER JOIN HourlyRates hr 
+        INNER JOIN (SELECT 'A' AS job_group, 20 AS hourly_rate UNION SELECT 'B' AS job_group, 30 AS hourly_rate) hr 
             ON wd.job_group = hr.job_group
     GROUP BY wd.employee_id,
         wd.half_of_month
