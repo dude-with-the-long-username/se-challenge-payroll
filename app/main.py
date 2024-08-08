@@ -4,8 +4,7 @@ from sqlalchemy.orm import Session
 import tempfile
 import os
 import hashlib
-from .database import create_hourly_rates_table
-from .database import engine, get_db
+from .database import engine, get_db, create_hourly_rates_table
 from . import models, queries
 
 models.Base.metadata.create_all(bind=engine)
