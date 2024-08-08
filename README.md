@@ -4,6 +4,7 @@
 - `pip install -r requirements.txt`
 - `uvicorn app.main:app --reload`
 - visit `http://127.0.0.1:8000/docs` & use the api end points
+- (you can try uploading the time-report-42.csv) file in as a sample
 
 
 # Problem statement:
