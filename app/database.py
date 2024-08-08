@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from .models import HourlyRates
 from sqlalchemy.exc import ProgrammingError
 
-SQLALCHEMY_DATABASE_URL = 'sqlite:///./sql_app.db'
+SQLALCHEMY_DATABASE_URL = 'sqlite:///./job_payroll.db'
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
@@ -12,6 +12,7 @@ engine = create_engine(
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def create_hourly_rates_table():
+    # creating & hardcoding values because rates for A & B are constant and don't change
     try:
         Base.metadata.create_all(bind=engine)
         session = SessionLocal()
