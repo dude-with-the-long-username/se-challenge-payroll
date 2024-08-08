@@ -72,23 +72,34 @@ async def get_payroll_report(db: Session = Depends(get_db)):
     # SQL query to return output in desired format
     payroll_report_query = """
 
-    SELECT
-        wd.employee_id,
-        CASE WHEN wd.half_of_month = 1 
-                THEN date(wd.date, 'start of month') 
-            ELSE date(wd.date, 'start of month', '+15 days') 
-        END AS start_date,
-        CASE WHEN wd.half_of_month = 1 
-                THEN date(wd.date, 'start of month', '+14 days') 
-            ELSE date(wd.date, 'start of month', '+1 month', '-1 day') 
-        END AS end_date,
-    SUM(wd.hours_worked * hr.hourly_rate) AS total_amount_paid
-    FROM employee_work wd
+        SELECT 
+        emp.employee_id
+        , emp.start_date
+        , emp.end_date
+        , SUM(emp.hours_worked * hr.hourly_rate) AS total_amount_paid
+    FROM
+        (
+            SELECT
+                wd.employee_id,
+                CASE WHEN wd.half_of_month = 1 
+                        THEN date(wd.date, 'start of month') 
+                    ELSE date(wd.date, 'start of month', '+15 days') 
+                END AS start_date,
+                CASE WHEN wd.half_of_month = 1 
+                        THEN date(wd.date, 'start of month', '+14 days') 
+                    ELSE date(wd.date, 'start of month', '+1 month', '-1 day') 
+                END AS end_date,
+                wd.hours_worked,
+                wd.job_group
+            FROM employee_work wd
+        )emp
         INNER JOIN (SELECT 'A' AS job_group, 20 AS hourly_rate UNION SELECT 'B' AS job_group, 30 AS hourly_rate) hr 
-            ON wd.job_group = hr.job_group
-    GROUP BY wd.employee_id,
-        wd.half_of_month
-
+            ON emp.job_group = hr.job_group
+    GROUP BY emp.employee_id
+        , emp.start_date
+        ,emp.end_date
+    ORDER BY emp.employee_id
+        , emp.start_date 
     """
 
     report_data = db.execute(payroll_report_query).fetchall()
