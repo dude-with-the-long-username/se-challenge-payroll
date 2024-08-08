@@ -3,13 +3,14 @@ from fastapi import FastAPI, UploadFile, File, Depends, HTTPException
 from sqlalchemy.orm import Session
 import tempfile
 import os
-from datetime import datetime
 import hashlib
-
+from .database import create_hourly_rates_table
 from .database import engine, get_db
 from . import models
 
 models.Base.metadata.create_all(bind=engine)
+
+create_hourly_rates_table() # create hourly_rates table (with rates for job groups A and B)
 
 app = FastAPI()
 
@@ -93,7 +94,7 @@ async def get_payroll_report(db: Session = Depends(get_db)):
                 wd.job_group
             FROM employee_work wd
         )emp
-        INNER JOIN (SELECT 'A' AS job_group, 20 AS hourly_rate UNION SELECT 'B' AS job_group, 30 AS hourly_rate) hr 
+        INNER JOIN hourly_rates hr 
             ON emp.job_group = hr.job_group
     GROUP BY emp.employee_id
         , emp.start_date

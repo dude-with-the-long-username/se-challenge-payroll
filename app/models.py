@@ -2,8 +2,6 @@ from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey
 from .database import Base
 from sqlalchemy.sql.sqltypes import Date
 from sqlalchemy.orm import relationship
-from datetime import datetime
-from pytz import timezone
 
 
 
@@ -28,3 +26,10 @@ class CSVData(Base):
 
     def __repr__(self) -> str:
         return f"<EmployeeWork(id={self.id}, date={self.date}, hours_worked={self.hours_worked}, employee_id={self.employee_id}, job_group={self.job_group})>"
+    
+class HourlyRates(Base):
+    __tablename__ = "hourly_rates"
+
+    id = Column(Integer, primary_key=True, index=True)
+    job_group = Column(String, unique=True, index=True)
+    hourly_rate = Column(Float)
