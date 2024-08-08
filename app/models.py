@@ -21,8 +21,8 @@ class CSVData(Base):
     employee_id = Column(Integer, nullable=False)
     job_group = Column(String, nullable=False)
     half_of_month = Column(Integer, nullable=False)     # finding which half of the month the date is in (expected values: 1 or 2 ie; first half or second half)
-    # file_hash_id = Column(String, ForeignKey('file_hash.file_hash'))
-    # file_hash = relationship("FileHash")
+    start_date = Column(Date, nullable=True)
+    end_date = Column(Date, nullable=True)
 
     def __repr__(self) -> str:
         return f"<EmployeeWork(id={self.id}, date={self.date}, hours_worked={self.hours_worked}, employee_id={self.employee_id}, job_group={self.job_group})>"

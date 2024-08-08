@@ -6,7 +6,7 @@ import os
 import hashlib
 from .database import create_hourly_rates_table
 from .database import engine, get_db
-from . import models
+from . import models, queries
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -21,7 +21,9 @@ def cast_csv_data(row):
             'hours_worked': float(row['hours worked']),
             'employee_id': int(row['employee id']),
             'job_group': str(row['job group']).strip().upper(),
-            'half_of_month': 1 if pd.to_datetime(row['date']).day <= 15 else 2   # calculating which half (first or second) of the month, the date belongs to
+            'half_of_month': 1 if pd.to_datetime(row['date'], dayfirst=True).day <= 15 else 2,   # calculating which half (first or second) of the month, the date belongs to
+            'start_date': None,
+            'end_date': None
         }
     except ValueError as e:
         raise ValueError(f"Error casting data in row {row.name + 2}: {str(e)}")
@@ -48,6 +50,7 @@ async def upload_csv(file: UploadFile = File(...), db: Session = Depends(get_db)
     
     try:
         df = pd.read_csv(temp_file_path)
+        update_start_and_end_date_query = queries.get_update_start_and_end_date_query()
         
         for _, row in df.iterrows():
             try:
@@ -58,6 +61,8 @@ async def upload_csv(file: UploadFile = File(...), db: Session = Depends(get_db)
                 db.rollback()
                 raise HTTPException(status_code=400, detail=str(e))
         
+        db.commit()
+        db.execute(update_start_and_end_date_query)
         db.commit()
         return {"message": "CSV data uploaded and stored in the database"}
     except Exception as e:
@@ -71,40 +76,9 @@ async def upload_csv(file: UploadFile = File(...), db: Session = Depends(get_db)
 async def get_payroll_report(db: Session = Depends(get_db)):
 
     # SQL query to return output in desired format
-    payroll_report_query = """
-
-    SELECT 
-        emp.employee_id
-        , emp.start_date
-        , emp.end_date
-        , SUM(emp.hours_worked * hr.hourly_rate) AS total_amount_paid
-    FROM
-        (
-            SELECT
-                wd.employee_id,
-                CASE WHEN wd.half_of_month = 1 
-                        THEN date(wd.date, 'start of month') 
-                    ELSE date(wd.date, 'start of month', '+15 days') 
-                END AS start_date,
-                CASE WHEN wd.half_of_month = 1 
-                        THEN date(wd.date, 'start of month', '+14 days') 
-                    ELSE date(wd.date, 'start of month', '+1 month', '-1 day') 
-                END AS end_date,
-                wd.hours_worked,
-                wd.job_group
-            FROM employee_work wd
-        )emp
-        INNER JOIN hourly_rates hr 
-            ON emp.job_group = hr.job_group
-    GROUP BY emp.employee_id
-        , emp.start_date
-        ,emp.end_date
-    ORDER BY emp.employee_id
-        , emp.start_date 
-    """
+    payroll_report_query = queries.get_payroll_report_query()
 
     report_data = db.execute(payroll_report_query).fetchall()
-
 
     processed_report_data = {
         "payrollReport": {
@@ -121,7 +95,6 @@ async def get_payroll_report(db: Session = Depends(get_db)):
             ]
         }
     }
-
 
     return processed_report_data
 
