@@ -1,11 +1,107 @@
-# How to Run:
+# 🚀 How to Run:
 
-- `python -m venv venv`
-- `pip install -r requirements.txt`
-- `uvicorn app.main:app --reload`
+- Navigate to project root folder & setup virtual environment using `python -m venv venv`
+- Install dependencies `pip install -r requirements.txt`
+- Run fastapi app using `uvicorn app.main:app --reload`
 - visit `http://127.0.0.1:8000/docs` & use the api end points
-- (you can try uploading the time-report-42.csv) file in as a sample
+- You can try uploading the time-report-42.csv file as a sample. [time-report-42](./samples/time-report-42.csv)
 
+
+# 📸 Screenshots:
+
+### Requirement 1 (successfully upload csv file):
+  - ![csv_upload](docs/csv_upload.png)
+### Requirement 2 (Payroll generator):
+  - ![payroll-42](docs/payroll-42.png)
+  - Output:
+```json
+  {
+  "payrollReport": {
+    "employeeReports": [
+      {
+        "employeeId": "1",
+        "payPeriod": {
+          "startDate": "2023-01-01",
+          "endDate": "2023-01-15"
+        },
+        "amountPaid": "$300.00"
+      },
+      {
+        "employeeId": "1",
+        "payPeriod": {
+          "startDate": "2023-01-16",
+          "endDate": "2023-01-31"
+        },
+        "amountPaid": "$80.00"
+      },
+      {
+        "employeeId": "2",
+        "payPeriod": {
+          "startDate": "2023-01-16",
+          "endDate": "2023-01-31"
+        },
+        "amountPaid": "$90.00"
+      }
+    ]
+  }
+}
+```
+### Requirement 3 (Don't allow duplicate file to be uploaded):
+  - ![duplicate_file_error](docs/duplicate_file_error.png)
+### Requirement 4 (Cumulative payroll when uploading other csv files too):
+  - when uploading another file [time-report-43](./samples/time-report-43.csv) too into the API endpoint, we get the following output:
+  - ![cumulative payroll of time-report-42 & 43](./docs/payroll-42+43.png)
+  - json output:
+  ```json
+  {
+    "payrollReport": {
+      "employeeReports": [
+        {
+          "employeeId": "1",
+          "payPeriod": {
+            "startDate": "2023-01-01",
+            "endDate": "2023-01-15"
+          },
+          "amountPaid": "$900.00"
+        },
+        {
+          "employeeId": "1",
+          "payPeriod": {
+            "startDate": "2023-01-16",
+            "endDate": "2023-01-31"
+          },
+          "amountPaid": "$240.00"
+        },
+        {
+          "employeeId": "1",
+          "payPeriod": {
+            "startDate": "2024-01-16",
+            "endDate": "2024-01-31"
+          },
+          "amountPaid": "$80.00"
+        },
+        {
+          "employeeId": "2",
+          "payPeriod": {
+            "startDate": "2023-01-16",
+            "endDate": "2023-01-31"
+          },
+          "amountPaid": "$270.00"
+        },
+        {
+          "employeeId": "2",
+          "payPeriod": {
+            "startDate": "2024-01-01",
+            "endDate": "2024-01-15"
+          },
+          "amountPaid": "$120.00"
+        }
+      ]
+    }
+  }
+  ```
+
+---
 
 # Problem statement:
 

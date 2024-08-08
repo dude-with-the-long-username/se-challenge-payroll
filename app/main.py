@@ -72,7 +72,7 @@ async def get_payroll_report(db: Session = Depends(get_db)):
     # SQL query to return output in desired format
     payroll_report_query = """
 
-        SELECT 
+    SELECT 
         emp.employee_id
         , emp.start_date
         , emp.end_date
