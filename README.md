@@ -135,6 +135,21 @@
 ### Requirement 4 (Cumulative payroll when uploading other csv files too):
   - when uploading other files too into the API endpoint, cumulative payroll report is generated. You can test this with the file present in the path `/samples/`
 
+## Answers:
+
+1. How did you test that your implementation was correct?
+  - Ran the app against [time-report-42.csv](time-report-42.csv), and some sample datasets I generated (which are stored in the path `./samples/`)
+  - Also uploaded other CSVs (after uploading time-report-42), to see cumulative output of all data entered, across all time. Verified the output with the calculated answers.
+2. If this application was destined for a production environment, what would you add or change?
+  - Implement proper logging mechanisms to log exceptions & errors.
+  - Input validation. Make mechanisms to ensure data is uploaded in desired format.
+  - Authentication. Add Authentication middleware to API endpoints for security.
+  - Indexing Database on commonly accessed columns to improve query speed
+  - Rate Limiting to protect against DDoS attacks.
+  - Monitoring using tools like Prometheus & Grafana to check health of app
+  - Load Balancing during peak times
+  - Containerization & distributed scaling across multiple machines (eg: using Kubernetes).
+
 ---
 
 # Problem statement:
